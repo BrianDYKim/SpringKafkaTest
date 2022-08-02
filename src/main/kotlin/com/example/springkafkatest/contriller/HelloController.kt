@@ -4,13 +4,13 @@ import com.example.springkafkatest.entity.Shop
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/kafka")
 class HelloController(
-    private val shopKafkaTemplate: KafkaTemplate<String, Shop>,
-    private val stringKafkaTemplate: KafkaTemplate<String, String>
+    private val shopKafkaTemplate: KafkaTemplate<String, Shop>
 ) {
 
     @GetMapping("/insert")
@@ -21,9 +21,10 @@ class HelloController(
         return "ok"
     }
 
-    @GetMapping("/insert-hello")
-    fun insertHello(): String {
-        stringKafkaTemplate.send("test.hello", "hello, kafka!")
+    @GetMapping("/insert2")
+    fun insertShop2(@RequestParam id: String, @RequestParam name: String): String {
+        val testShop = Shop(id, name)
+        shopKafkaTemplate.send("test.shop", testShop)
 
         return "ok"
     }
